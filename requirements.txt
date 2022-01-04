@@ -73,4 +73,3 @@ virtualenv==20.13.0
 Werkzeug==2.0.1
 whitenoise==5.3.0
 wrapt==1.12.1
-psycopg2==2.4.4
