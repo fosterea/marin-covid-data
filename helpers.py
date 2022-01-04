@@ -135,7 +135,8 @@ def add_vaxed_infection_rate(dates, data):
 		# in marin to get the percent of cases that are from vaxed people.
 		# Once CA data runs out it just uses the last vaxed case percent
 		# for subsequent days.
-		pop = int(day_data['population_vaccinated']) / (int(day_data['population_vaccinated']) + int(day_data['population_unvaccinated']))
+		# pop = int(day_data['population_vaccinated']) / (int(day_data['population_vaccinated']) + int(day_data['population_unvaccinated']))
+		pop = day['ca_pop']
 		protection = get_protection(day_data, 'cases', pop)
 		rate = day['marin_pop'] * protection
 		day['vax%cases'] = rate
@@ -193,6 +194,7 @@ def compile_data(data):
 	# Add marin population data
 	marin_vaxed_percent(dates, data['marin_population'])
 	add_vaxed_percent(dates, data['marin'], data['marin_population'], "marin")
+	add_vaxed_percent(dates, data['ca'], data['ca_population'], "ca")
 	
 	# Add infection rates
 	add_vaxed_infection_rate(dates, data)
