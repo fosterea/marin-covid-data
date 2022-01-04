@@ -1,0 +1,85 @@
+{% extends "mysite/base.html" %}
+
+
+{% block title %}Marin Covid Risks{% endblock %}
+
+{% block main %}
+<br>
+<br>
+<section>
+	<h1>About the data</h1>
+	<br>
+	<p>
+		These graphs estimate the risk of getting covid for people of different age groups in Marin county based on
+		covid cases by age group, provided by Marin HHS, and California-wide data about the protection people receive
+		from the vaccine, provided by California HHS. These graphs do not represent what actually happened; they just
+		estimate the risk by vaccination status. The calculations assume vaccination rates are the same for all people
+		eligible for the vaccine, which isn’t true. The unvaccinated case rate is very high because they make up a small
+		percent of the population but the majority of covid cases.
+	</p>
+	
+	<div id='sources_table' class='grid-container'>
+		<div class="grid-item">
+			<a href="https://covidactnow.org/us/california-ca/county/marin_county/" target="_blank">
+				<img src='static/logos/covid-act-now.png' alt='covid act now logo' class='logo'>
+			</a>
+		</div>
+		<div class="grid-item">
+			<a href="https://covidactnow.org/data-api" target="_blank">
+				Covid Act Now API
+			</a>
+		</div>
+		<div class="grid-item">
+			<a href="https://coronavirus.marinhhs.org/surveillance" target="_blank">
+				<img src='static/logos/marinHHS.png' alt="Marin HHS logo" class='logo'
+					style="background-color: #101d92;">
+			</a>
+		</div>
+		<div class="grid-item">
+			<a href="https://data.marincounty.org/Public-Health/COVID-19-Case-Demographics-Age-/rucx-nsrq" target="_blank">
+				Marin cases by age dataset
+			</a>
+		</div>
+		<div class="grid-item">
+			<a href="https://data.chhs.ca.gov/" target="_blank">
+				<img src='static/logos/ca-open-data.png' alt='CA HHS logo' class='logo'>
+			</a>
+		</div>
+		<div class="grid-item">
+			<a href="https://data.chhs.ca.gov/dataset/covid-19-post-vaccination-infection-data" target="_blank">
+				California Covid data by vaccination status
+			</a>
+		</div>
+
+	</div>
+
+	<p>
+		Calculating the percent of cases in Marin from vaccinated people used the formula: percent of Marin population
+		that is vaccinated * percent of cases in California from vaccinated people/percent of Californians who are
+		vaccinated.
+	</p>
+	<p>
+		<b>Note</b> the graphs are scaled differently based on how best to present the data so data may be distorted. At
+		the end, there is a graph comparing covid cases/100k for all vaccinated people and ages 0-4 because they can’t
+		get vaccinated. It is kind of messy.
+	</p>
+</section>
+
+{% for group in groups%}
+
+<section>
+	<h1>{{group}}</h1>
+	<br>
+	<div id='{{group}}' class="graph"></div>
+</section>
+
+{% endfor %}
+
+<section>
+	<h1>All Ages</h1>
+	<br>
+	<p>This graph shows data for all vaccinated groups and ages 0-4.</p>
+	<div id='all graph' class="graph"></div>
+</section>
+
+{% endblock %}
