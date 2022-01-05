@@ -105,6 +105,13 @@ def update_data():
 		reader = csv.DictReader(f)
 
 		for row in reader:
+
+			row['DATE'] = row['\ufeffDATE']
+			del row['\ufeffDATE']
+
+			for key in row.copy().keys():
+				row[key.lower()] = row[key]
+				del row[key]
 			vac_data[row['date']] = row
 
 	VAC_URL = 'https://data.chhs.ca.gov/dataset/e39edc8e-9db1-40a7-9e87-89169401c3f5/resource/39969fac-02c6-4dc5-967f-0d1438a91f81/download/covid19postvaxstatewidestats_111321.csv'
