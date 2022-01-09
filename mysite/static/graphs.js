@@ -5,6 +5,7 @@ fetch('/api/data.json')
 	.then(function (json) {
 		let serieses = createGraph(json.series);
 		renderCharts(serieses);
+		document.getElementById('alert_holder').innerHTML = '';
 	})
 	.catch(function (error) {
 		//Something went wrong
