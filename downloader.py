@@ -7,7 +7,7 @@ import urllib, json
 import time
 from helpers import convert_date, compile_data, AGE_GROUPS
 
-SECONDS_IN_HOUR = 3600
+SECONDS_IN_HOUR = 0
 
 # Makes sure the data has been updated within
 # an hour and returns the data as a json
@@ -105,6 +105,10 @@ def update_data():
 		reader = csv.DictReader(f)
 
 		for row in reader:
+			
+			if 'date' in row:
+				vac_data[row['date']] = row
+				continue
 
 			row['DATE'] = row['\ufeffDATE']
 			del row['\ufeffDATE']
@@ -129,6 +133,10 @@ def update_data():
 		reader = csv.DictReader(f)
 
 		for row in reader:
+			
+			if 'date' in row:
+				vac_data[row['date']] = row
+				continue
 
 			row['DATE'] = row['\ufeffDATE']
 			del row['\ufeffDATE']
