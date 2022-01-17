@@ -85,6 +85,9 @@ def add_age(dates, data):
 	breakdown = {group : dates[i][group]['cases'] / total for group in AGE_GROUPS}
 	while i > 0:
 		i -= 1
+		if cases[dates[i]['date']]['newCases'] == None:
+			del dates[i]
+			continue
 		new_cases = cases[dates[i]['date']]['newCases']
 		for group in AGE_GROUPS:
 			dates[i][group] = {"cases" : breakdown[group] * new_cases}
@@ -200,6 +203,10 @@ def compile_data(data):
 	add_vaxed_infection_rate(dates, data)
 	# Sort ceses into vaxed and unvaxed
 	sort_cases(dates, data)
+
+	# Add hosp and death data for california
+	add_hosp_death_ca(dates, data['vac_data'])
+
 	return dates
 
 def marin_vaxed_percent(dates, population):
@@ -228,3 +235,26 @@ def marin_vaxed_percent(dates, population):
 		# rate is that of last avalible date
 		if vaxed != None:
 			day['marin_pop'] = vaxed
+
+def add_hosp_death_ca(dates, ca_data):
+	"""Add data from chhs page about deaths and hosps in California."""
+	for day in reversed(dates):
+
+		if day['date'] not in ca_data:
+			continue
+		date = day['date']
+		data_day = ca_data[date]
+
+		day['cali_data'] = {}
+
+		day['cali_data']['un_hosp/100k'] = float(data_day['unvaccinated_hosp_per_100k'])
+		day['cali_data']['vax_hosp/100k'] = float(data_day['vaccinated_hosp_per_100k'])
+
+		day['cali_data']['un_hosp/case'] = float(data_day['unvaccinated_hosp']) / float(data_day['unvaccinated_cases'])
+		day['cali_data']['vax_hosp/case'] = float(data_day['vaccinated_hosp']) / float(data_day['vaccinated_cases'])
+
+		day['cali_data']['un_deaths/100k'] = float(data_day['unvaccinated_deaths_per_100k'])
+		day['cali_data']['vax_deaths/100k'] = float(data_day['vaccinated_deaths_per_100k'])
+
+		day['cali_data']['un_deaths/case'] = float(data_day['unvaccinated_deaths']) / float(data_day['unvaccinated_cases'])
+		day['cali_data']['vax_deaths/case'] = float(data_day['vaccinated_deaths']) / float(data_day['vaccinated_cases'])

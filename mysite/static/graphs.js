@@ -4,7 +4,7 @@ fetch('/api/data.json')
 	})
 	.then(function (json) {
 		let serieses = createGraph(json.series);
-		renderCharts(serieses);
+		renderCharts(serieses, json.cali_data);
 		document.getElementById('alert_holder').innerHTML = '';
 	})
 	.catch(function (error) {
@@ -49,7 +49,7 @@ function renderChart(series, group, msg) {
 	});
 }
 
-function renderCharts(serieses) {
+function renderCharts(serieses, cali_data) {
 	all_series = [];
 	for (const [group, series] of Object.entries(serieses)) {
 		if (document.getElementById(group)) {
@@ -63,4 +63,37 @@ function renderCharts(serieses) {
 	}
 	console.log(all_series)
 	renderChart(all_series, 'all graph', 'Average daily covid cases/100k for vaccinated people and 0-4 year olds')
+	
+	
+	for (const graph of cali_data) {
+		if (document.getElementById(graph.lable)) {
+			renderChart_cali(graph.series, graph.lable, graph.msg, graph.units);
+		}
+	}
+
+}
+
+function renderChart_cali(series, id, msg, units) {
+	JSC.Chart(id, {
+		title_label_text: msg,
+		defaultPoint_tooltip: '%icon %seriesName: <b>%yValue</b> ' + units,
+		series: series,
+		xAxis: { 
+			scale_type: 'time', 
+			crosshair: { 
+			  enabled: true, 
+			  label_text: '{%value:date y}'
+			}
+		},
+		defaultPoint: { 
+			marker_visible: false
+		  },
+		legend: {
+			template: '%icon %name'
+		},
+		annotations: [{
+			label_text: 'Data provided by Act Now Covid, Marin HHS, and California HHS',
+			position: 'bottom left'
+		}],
+	});
 }

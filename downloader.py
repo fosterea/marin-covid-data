@@ -7,7 +7,7 @@ import urllib, json
 import time
 from helpers import convert_date, compile_data, AGE_GROUPS
 
-SECONDS_IN_HOUR = 0
+SECONDS_IN_HOUR = 3600
 
 # Makes sure the data has been updated within
 # an hour and returns the data as a json
@@ -185,6 +185,7 @@ def update_data():
 
 	# Add series for graphs
 	add_series(breakdown)
+	add_cali_data(breakdown)
 	# Stores the data in data_storage/data.json
 	with open('data_storage/data.json', 'w') as f:
 		json.dump(breakdown, f)
@@ -223,3 +224,95 @@ def _7day_average(days, day_num):
 		if number == 7:
 			break
 	return sum / number
+
+
+def add_cali_data(data):
+
+	vax_hosps_k = []	
+	un_hosps_k = []	
+	vax_hosps_c = []	
+	un_hosps_c = []	
+
+	vax_deaths_k = []	
+	un_deaths_k = []	
+	vax_deaths_c = []	
+	un_deaths_c = []
+
+
+	for day in data['data']:
+
+		if 'cali_data' not in day:
+			continue
+
+		vax_hosps_k.append({'x': day['date'], 'y': day['cali_data']['vax_hosp/100k']})
+		un_hosps_k.append({'x': day['date'], 'y': day['cali_data']['un_hosp/100k']})
+		vax_hosps_c.append({'x': day['date'], 'y': day['cali_data']['vax_hosp/case']})
+		un_hosps_c.append({'x': day['date'], 'y': day['cali_data']['un_hosp/case']})
+
+		vax_deaths_k.append({'x': day['date'], 'y': day['cali_data']['vax_deaths/100k']})
+		un_deaths_k.append({'x': day['date'], 'y': day['cali_data']['un_deaths/100k']})
+		vax_deaths_c.append({'x': day['date'], 'y': day['cali_data']['vax_deaths/case']})
+		un_deaths_c.append({'x': day['date'], 'y': day['cali_data']['un_deaths/case']})
+		
+
+	serieses = [
+		vax_hosps_k,	
+		un_hosps_k,
+		vax_hosps_c,	
+		un_hosps_c,
+
+		vax_deaths_k,
+		un_deaths_k,
+		vax_deaths_c,
+		un_deaths_c,
+	]
+
+
+	for series in serieses:
+		for i in range(len(series)):
+			series[i]['y'] = _7day_average(series, i)
+	
+	
+	serieses = []
+
+	serieses.append({
+		'series': [
+			{'points' : vax_hosps_k, 'name' : 'vaxed'},
+			{'points' : un_hosps_k, 'name' : 'unvaxed'},
+			], 
+		'lable': 'hosps/100k',
+		'units' : 'hospitalizations/100k',
+		'msg' : 'Hospitalizations per 100k in California (7 day average)'
+		})
+
+	serieses.append({
+		'series': [
+			{'points' : vax_hosps_c, 'name' : 'vaxed'},
+			{'points' : un_hosps_c, 'name' : 'unvaxed'},
+			], 
+		'lable': 'hosps/case',
+		'units' : 'hospitalizations/case',
+		'msg' : 'Hospitalizations per case in California (7 day average)'
+		})
+
+	serieses.append({
+		'series': [
+			{'points' : vax_deaths_k, 'name' : 'vaxed'},
+			{'points' : un_deaths_k, 'name' : 'unvaxed'},
+			], 
+		'lable': 'deaths/100k',
+		'units' : 'deaths/100k',
+		'msg' : 'Deaths per 100k in California (7 day average)'
+		})
+
+	serieses.append({
+		'series': [
+			{'points' : vax_deaths_c, 'name' : 'vaxed'},
+			{'points' : un_deaths_c, 'name' : 'unvaxed'},
+			], 
+		'lable': 'deaths/case',
+		'units' : 'deaths/case',
+		'msg' : 'Deaths per case in California (7 day average)'
+		})
+
+	data['cali_data'] = serieses
