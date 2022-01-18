@@ -6,6 +6,11 @@ fetch('/api/data.json')
 		let serieses = createGraph(json.series);
 		renderCharts(serieses, json.cali_data);
 		document.getElementById('alert_holder').innerHTML = '';
+
+		const d = new Date();
+		if (d / 1000 - json.updated > 3600) {
+			document.getElementById('alert_holder').innerHTML = '<div class="alert alert-warning" role="alert" id="warn-alert">The data didn\'t update properly, but everything should still work. The website just needs some maintenance.</div><br>'
+		}
 	})
 	.catch(function (error) {
 		//Something went wrong
@@ -92,7 +97,7 @@ function renderChart_cali(series, id, msg, units) {
 			template: '%icon %name'
 		},
 		annotations: [{
-			label_text: 'Data provided by Act Now Covid, Marin HHS, and California HHS',
+			label_text: 'Data provided California HHS',
 			position: 'bottom left'
 		}],
 	});

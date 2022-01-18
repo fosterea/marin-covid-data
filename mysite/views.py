@@ -1,3 +1,5 @@
+from typing import get_args
+from webbrowser import get
 from django.http import HttpResponse
 from django.shortcuts import render
 from api import get_file
@@ -10,10 +12,12 @@ def index(request):
 
 def api(request, file):
 	if file == 'data.json':
-		load_data()
-	path = 'data_storage/' + file
+		try:
+			load_data()
+		except Exception:
+			pass
 	try:
-		file = get_file(path)
+		file = get_file(file)
 	except OSError:
 		return HttpResponse(status='404')
 	response = HttpResponse(file)

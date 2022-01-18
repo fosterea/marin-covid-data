@@ -1,3 +1,6 @@
-def get_file(path):
+def get_file(file):
+	path = 'data_storage/' + file
 	with open(path, 'rb') as f:
-		return f.read()
+		file =  f.read()
+	return file
+	
