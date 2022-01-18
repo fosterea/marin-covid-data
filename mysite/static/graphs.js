@@ -97,7 +97,7 @@ function renderChart_cali(series, id, msg, units) {
 			template: '%icon %name'
 		},
 		annotations: [{
-			label_text: 'Data provided California HHS',
+			label_text: 'Data provided by California HHS',
 			position: 'bottom left'
 		}],
 	});
