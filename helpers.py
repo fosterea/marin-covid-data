@@ -92,6 +92,7 @@ def add_age(dates, data):
 		for group in AGE_GROUPS:
 			dates[i][group] = {"cases" : breakdown[group] * new_cases}
 			dates[i][group]['cases100k'] = dates[i][group]['cases'] * _100K / (population * age_pc[group])
+		
 
 def add_vaxed_percent(dates, actuals, population, place):
 	"""Adds the percent of the population that is
@@ -125,7 +126,7 @@ def add_vaxed_infection_rate(dates, data):
 	# Marin vaxed infection rate
 	rate = None
 	for day in reversed(dates):
-		if day['date'] not in vax_data or 'marin_pop' not in day:
+		if day['date'] not in vax_data or 'marin_pop' not in day or day['marin_pop'] == 0 or 'ca_pop' not in day or day['ca_pop'] == 0:
 			day['vax%cases'] = rate
 			continue
 		day_data = vax_data[day['date']]
