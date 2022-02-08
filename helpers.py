@@ -80,8 +80,9 @@ def add_age(dates, data):
 	# Estimates data for recent days
 	for i in range(len(dates)):
 		if AGE_GROUPS[0] in dates[i]:
-			break
-	total = sum([dates[i][group]['cases'] for group in AGE_GROUPS])
+			total = sum([dates[i][group]['cases'] for group in AGE_GROUPS])
+			if total > 0:
+				break
 	breakdown = {group : dates[i][group]['cases'] / total for group in AGE_GROUPS}
 	while i > 0:
 		i -= 1

@@ -12,10 +12,7 @@ def index(request):
 
 def api(request, file):
 	if file == 'data.json':
-		try:
-			load_data()
-		except Exception:
-			pass
+		load_data()
 	try:
 		file = get_file(file)
 	except OSError:
